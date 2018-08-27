@@ -8,43 +8,84 @@ import {
   Button,
   Image,
 } from 'react-native';
-import circle_outline from './images/circle_outline.png';
-import cross from './images/cross.png';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+let SQLite = require('react-native-sqlite-storage');
 
 type Props = {};
 export default class GameScreen extends Component<Props> {
   static navigationOptions = {
-    title: "Tic Tac Toe",
-  }
+    title: 'Tic Tac Toe Game',
+  };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      gameMode: 1,
-      players: [],
+      gameMode: this.props.navigation.getParam("gameMode"),
+      players: this.props.navigation.getParam("players"),
+      winP1: null,
+      winP2: null,
       gameState: [
         [0, 0, 0],
         [0, 0, 0],
         [0, 0, 0],
       ],
       currentPlayer: 1,
-    }
+    };
+
+    this._update = this._update.bind(this);
+
+    this.db = SQLite.openDatabase({
+      name: 'playersdb',
+      createFromLocation: '~playersdb.sqlite'
+    }, this.openDb, this.errorDb);
   }
 
   ComponentDidMount() {
     this.initializeGame();
+  }
+
+  _update() {
     this.setState({
-      gameMode: this.props.navigation.getParam("gameMode"),
-      players: this.props.navigation.getParam("players"),
+      winP1: this.state.players[0].winRecord,
+    })
+
+    this.db.transaction( (tx) => {
+      tx.executeSql('UPDATE players SET winRecord=? WHERE id=?', [
+        this.state.winP1,
+        this.state.players[0].id,
+      ]);
     });
+
+    if (this.state.gameMode == 2) {
+      this.setState({
+        winP2: this.state.players[1].winRecord,
+      })
+      this.db.transaction((tx) => {
+        tx.executeSql('UPDATE players SET winRecord=? WHERE id=?', [
+          this.state.winP2,
+          this.state.players[1].id,
+        ]);
+      });
+    }
+
+    this.props.navigation.getParam('refresh')();
+  }
+
+  openDb() {
+    console.log('Database opened');
+  }
+
+  errorDb(err) {
+    console.log('SQL Error: ' + err);
   }
 
   renderImage = (row, col) => {
     var value = this.state.gameState[row][col];
     switch(value) {
-      case 1: return <Image style={styles.image} source={cross}/>;
-      case -1: return <Image style={styles.image} source={circle_outline}/>;
+      case 1: return <Icon name='close' style={styles.tileX}/>;
+      case -1: return <Icon name='circle-outline' style={styles.tileO}/>;
       default: return <View />;
     }
   }
@@ -58,6 +99,7 @@ export default class GameScreen extends Component<Props> {
       ],
       currentPlayer: 1,
     });
+
   }
 
   getWinner = () => {
@@ -109,10 +151,12 @@ export default class GameScreen extends Component<Props> {
       this.botMove();
     }
     else if (winner == 1) {
-      Alert.alert(this.state.players[0] + " is the winner");
+      Alert.alert(this.state.players[0].name + " is the winner! ");
+      this.state.players[0].winRecord += 1;
     }
     else if (winner == -1) {
-      Alert.alert(this.state.players[1] + " is the winner");
+      Alert.alert(this.state.players[1].name + " is the winner! ");
+      this.state.players[1].winRecord += 1;
     }
   }
 
@@ -186,16 +230,20 @@ export default class GameScreen extends Component<Props> {
 
     var winner = this.getWinner();
     if (winner == 1) {
-      Alert.alert(this.state.players[0] + " is the winner");
+      Alert.alert(this.state.players[0].name + " is the winner! ");
+      this.state.players[0].winRecord += 1;
     }
     else if (winner == -1) {
-      Alert.alert(this.state.players[1] + " is the winner");
+      Alert.alert("You lose to the bot! ");
     }
   }
 
   onNewGamePress = () => {
     Alert.alert("The game is reset. ");
     this.initializeGame();
+    console.log(this.state.players[0].winRecord);
+    this._update();
+    console.log(this.state.players[1].winRecord);
   }
 
   render() {
@@ -279,5 +327,19 @@ const styles = StyleSheet.create({
   image: {
     width: 92,
     height: 92,
+  },
+
+  tileX: {
+    color: 'red',
+    fontSize: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  tileO: {
+    color: 'blue',
+    fontSize: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
