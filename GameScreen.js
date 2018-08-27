@@ -8,7 +8,6 @@ import {
   Button,
   Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import circle_outline from './images/circle_outline.png';
 import cross from './images/cross.png';
 
@@ -22,8 +21,8 @@ export default class GameScreen extends Component<Props> {
     super(props);
 
     this.state = {
-      gameMode: this.props.navigation.getParam("gameMode"),
-      players: this.props.navigation.getParam("players"),
+      gameMode: 1,
+      players: [],
       gameState: [
         [0, 0, 0],
         [0, 0, 0],
@@ -35,13 +34,17 @@ export default class GameScreen extends Component<Props> {
 
   ComponentDidMount() {
     this.initializeGame();
+    this.setState({
+      gameMode: this.props.navigation.getParam("gameMode"),
+      players: this.props.navigation.getParam("players"),
+    });
   }
 
   renderImage = (row, col) => {
     var value = this.state.gameState[row][col];
     switch(value) {
-      case 1: return <Icon name='close' style={styles.tileX}/>;
-      case -1: return <Icon name='circle-outline' style={styles.tileO}/>;
+      case 1: return <Image style={styles.image} source={cross}/>;
+      case -1: return <Image style={styles.image} source={circle_outline}/>;
       default: return <View />;
     }
   }
@@ -276,19 +279,5 @@ const styles = StyleSheet.create({
   image: {
     width: 92,
     height: 92,
-  },
-
-  tileX: {
-    color: 'red',
-    fontSize: 60,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-
-  tileO: {
-    color: 'blue',
-    fontSize: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

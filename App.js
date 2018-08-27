@@ -7,6 +7,11 @@ import ChooseModeScreen from './ChooseModeScreen'
 import ChoosePlayerScreen from './ChoosePlayerScreen';
 import GameScreen from './GameScreen';
 import CreatePlayerScreen from './CreatePlayerScreen';
+import CreateFeedbackScreen from './CreateFeedbackScreen';
+import FeedbackHomeScreen from './FeedbackHomeScreen';
+import ViewFeedbackScreen from './ViewFeedbackScreen';
+
+console.disableYellowBox=true;
 
 export default createStackNavigator({
   Begin: {
@@ -23,6 +28,15 @@ export default createStackNavigator({
   },
   CreatePlayer: {
     screen: CreatePlayerScreen,
+  },
+  FeedbackHome:{
+    screen:FeedbackHomeScreen,
+  },
+  CreateFeedback:{
+    screen: CreateFeedbackScreen,
+  },
+  ViewFeedback:{
+    screen: ViewFeedbackScreen,
   },
 }, {
   initialRouteName: 'Begin',
