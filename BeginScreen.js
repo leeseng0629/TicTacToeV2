@@ -32,6 +32,10 @@ export default class BeginScreen extends Component<Props> {
       </TouchableHighlight>
       </View>
 
+      <Text style={styles.feedb}
+      onPress={() => {this.props.navigation.navigate('FeedbackHome')}}>
+      Send Us Feedback</Text>
+
       </View>
     );
   }
@@ -66,5 +70,11 @@ const styles = StyleSheet.create({
   buttonText: {
     padding: 20,
     color: 'white'
+  },
+  feedb: {
+    fontSize: 10,
+    color: 'blue',
+    textDecorationLine: 'underline',
+    textAlignVertical: 'bottom',
   }
 })
