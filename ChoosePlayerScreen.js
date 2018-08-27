@@ -119,12 +119,12 @@ export default class IndexScreen extends Component<Props> {
                 this.setState({player:item})
                 if(this.state.gameMode==1){
                   Alert.alert(item.name+' ready to challege')
-                  this.setState({readyPlayers:item})
+                  this.setState({readyPlayers:this.state.readyPlayers.concat([item.id])});
                   this.showStartButton()
                 }
                 else if(this.state.gameMode==2){
                   if(this.state.readyPlayers.length!=2)  {
-                    this.setState({readyPlayers:this.state.readyPlayers.concat([item])});
+                    this.setState({readyPlayers:this.state.readyPlayers.concat([item.id])});
                   }
                   if(this.state.readyPlayers.length==0){
                     Alert.alert('First Player is '+item.name);
