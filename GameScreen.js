@@ -24,8 +24,6 @@ export default class GameScreen extends Component<Props> {
     this.state = {
       gameMode: this.props.navigation.getParam("gameMode"),
       players: this.props.navigation.getParam("players"),
-      winP1: null,
-      winP2: null,
       gameState: [
         [0, 0, 0],
         [0, 0, 0],
@@ -42,29 +40,26 @@ export default class GameScreen extends Component<Props> {
     }, this.openDb, this.errorDb);
   }
 
-  ComponentDidMount() {
+  componentDidMount() {
     this.initializeGame();
   }
 
-  _update() {
-    this.setState({
-      winP1: this.state.players[0].winRecord,
-    })
+  componentWillUnmount() {
+    this._update();
+  }
 
+  _update() {
     this.db.transaction( (tx) => {
       tx.executeSql('UPDATE players SET winRecord=? WHERE id=?', [
-        this.state.winP1,
+        this.state.players[0].winRecord,
         this.state.players[0].id,
       ]);
     });
 
     if (this.state.gameMode == 2) {
-      this.setState({
-        winP2: this.state.players[1].winRecord,
-      })
       this.db.transaction((tx) => {
         tx.executeSql('UPDATE players SET winRecord=? WHERE id=?', [
-          this.state.winP2,
+          this.state.players[1].winRecord,
           this.state.players[1].id,
         ]);
       });
@@ -99,7 +94,6 @@ export default class GameScreen extends Component<Props> {
       ],
       currentPlayer: 1,
     });
-
   }
 
   getWinner = () => {
@@ -241,9 +235,6 @@ export default class GameScreen extends Component<Props> {
   onNewGamePress = () => {
     Alert.alert("The game is reset. ");
     this.initializeGame();
-    console.log(this.state.players[0].winRecord);
-    this._update();
-    console.log(this.state.players[1].winRecord);
   }
 
   render() {

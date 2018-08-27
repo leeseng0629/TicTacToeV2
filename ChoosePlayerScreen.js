@@ -51,7 +51,7 @@ export default class IndexScreen extends Component<Props> {
     this._query = this._query.bind(this);
 
     this.db=SQLite.openDatabase({
-      name: 'playerdb',
+      name: 'playersdb',
       createFromLocation:'~playersdb.sqlite'
     },this.openDb,this.errorDb);
   }
@@ -119,12 +119,12 @@ export default class IndexScreen extends Component<Props> {
                 this.setState({player:item})
                 if(this.state.gameMode==1){
                   Alert.alert(item.name+' ready to challege')
-                  this.setState({readyPlayers:this.state.readyPlayers.concat([item.id])});
+                  this.setState({readyPlayers:this.state.readyPlayers.concat([item])});
                   this.showStartButton()
                 }
                 else if(this.state.gameMode==2){
                   if(this.state.readyPlayers.length!=2)  {
-                    this.setState({readyPlayers:this.state.readyPlayers.concat([item.id])});
+                    this.setState({readyPlayers:this.state.readyPlayers.concat([item])});
                   }
                   if(this.state.readyPlayers.length==0){
                     Alert.alert('First Player is '+item.name);
