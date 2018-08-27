@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
   Button,
   Image,
@@ -241,6 +242,33 @@ export default class GameScreen extends Component<Props> {
     return (
       <View style={styles.container}>
 
+        <View style={styles.playersContainer}>
+
+          <TouchableWithoutFeedback disabled={true}>
+            <View style={{alignItems: 'center', flexDirection: 'column', paddingRight: 40}}>
+              <Text style={styles.playersName}>{this.state.players[0].name}</Text>
+              <Icon name='close' style={[styles.tileX, {fontSize: 15}]} />
+            </View>
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback disabled={true}>
+            <View style={{alignItems: 'center', flexDirection: 'column'}}>
+              <Text style={styles.playersName}>{this.state.gameMode != 1 ? this.state.players[1].name : 'Bot'}</Text>
+              <Icon name='circle-outline' style={[styles.tileO, {fontSize: 15}]} />
+            </View>
+          </TouchableWithoutFeedback>
+
+        </View>
+
+        <View style={{paddingBottom: 10}} />
+
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Icon name='close' style={[styles.tileX, {fontSize: 15}]} />
+          <Text> always start first! </Text>
+        </View>
+
+        <View style={{paddingBottom: 20}} />
+
         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
 
           <TouchableOpacity style={[styles.tile, {borderLeftWidth: 0, borderTopWidth: 0}]} onPress={() => this.onTilePress(0, 0)}>
@@ -307,17 +335,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 
+  playersContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  playersName: {
+    fontSize: 20,
+    color: 'black',
+  },
+
   tile: {
     borderWidth: 5,
     width: 100,
     height: 100,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-
-  image: {
-    width: 92,
-    height: 92,
   },
 
   tileX: {
