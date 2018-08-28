@@ -2,9 +2,7 @@ import sqlite3
 from flask import Flask, jsonify, request, abort
 from argparse import ArgumentParser
 
-
 DB = 'db.sqlite'
-
 
 def get_row_as_dict(row):
     row_dict = {

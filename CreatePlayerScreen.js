@@ -30,7 +30,7 @@ export default class StoreScreen extends Component<Props> {
     this._insert = this._insert.bind(this);
 
     this.db=SQLite.openDatabase({
-      name: 'playerdb',
+      name: 'playersdb',
       createFromLocation:'~playersdb.sqlite'
     },this.openDb,this.errorDb);
   }
